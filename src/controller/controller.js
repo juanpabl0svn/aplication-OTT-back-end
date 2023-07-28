@@ -12,21 +12,32 @@ async function userExists(username) {
 
 async function checkJWT(req, res) {
   const { token } = req.params;
-  const geniun = await jwt.verify(token, process.env.SECRET_KEY);
-  if (geniun) {
-    return res.status(200).json({state: 'Verify'})
+
+  try {
+    const { username } = await jwt.verify(token, process.env.SECRET_KEY);
+
+    const exist = await userExists(username);
+
+    if (exist) {
+      return res.status(200).json({ status: "Validate" });
+    }
+    return res.status(403).json({ state: "Something went wrong", err });
+  } catch (err) {
+    return res.status(403).json({ state: "Something went wrong", err });
   }
-  return res.status(403).json({state: 'Something went wrong'})
 }
 
 async function auth(req, res) {
   const { body } = req;
   const user = await usersModel.findOne(body);
-  if (user){
-    const token = await jwt.sign({username : body.username}, process.env.SECRET_KEY)
-    return res.status(200).json({token, username : body.username})
+  if (user) {
+    const token = await jwt.sign(
+      { username: body.username },
+      process.env.SECRET_KEY
+    );
+    return res.status(200).json({ token });
   }
-  return res.status(403).json({error: 'Not found'})
+  return res.status(403).json({ error: "Not found" });
 }
 
 async function createUser(req, res) {
@@ -45,5 +56,5 @@ module.exports = {
   userExists,
   createUser,
   auth,
-  checkJWT
+  checkJWT,
 };
