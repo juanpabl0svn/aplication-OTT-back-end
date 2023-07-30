@@ -2,6 +2,7 @@ const { Router } = require("express");
 const {
   getUserData,
   userExists,
+  deleteAccount,
   createUser,
   auth,
   checkJWT,
@@ -26,4 +27,5 @@ router.get("/check/:token", checkJWT);
 router.post("/auth", auth);
 router.post("/create", createUser);
 
+router.delete('/delete/:token',deleteAccount)
 module.exports = router;

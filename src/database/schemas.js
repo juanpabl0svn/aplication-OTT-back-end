@@ -23,7 +23,7 @@ const userScheme = new mongoose.Schema(
     },
     endMerbership: {
       type: Date,
-    },
+    }
   },
   { timestamps: true, versionKey: false }
 );
