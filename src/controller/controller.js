@@ -2,9 +2,6 @@ const usersModel = require("../database/schemas.js");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-async function getUserData({ username, password }) {
-  return await usersModel.find({ username, password });
-}
 
 async function userExists(username) {
   return await usersModel.findOne({ username });
@@ -69,7 +66,6 @@ async function createUser(req, res) {
 
 async function deleteAccount(req, res) {
   const { token } = req.params;
-  console.log(token);
   try {
     const data = await jwt.verify(token, process.env.SECRET_KEY);
 
@@ -81,8 +77,6 @@ async function deleteAccount(req, res) {
 }
 
 module.exports = {
-  getUserData,
-  userExists,
   createUser,
   auth,
   checkJWT,

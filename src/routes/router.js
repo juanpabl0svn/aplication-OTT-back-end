@@ -1,7 +1,5 @@
 const { Router } = require("express");
 const {
-  getUserData,
-  userExists,
   deleteAccount,
   createUser,
   auth,
@@ -19,7 +17,7 @@ router.use(cookieParser());
 
 
 router.get("/", (req, res) => {
-  res.send("hola");
+  res.send("Welcome to my api");
 });
 
 router.get("/check/:token", checkJWT);
