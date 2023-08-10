@@ -2,7 +2,6 @@ const usersModel = require("../database/schemas.js");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-
 async function userExists(username) {
   return await usersModel.findOne({ username });
 }
@@ -39,14 +38,17 @@ async function checkJWT(req, res) {
 async function auth(req, res) {
   const { body } = req;
   const user = await usersModel.findOne(body);
-  if (user && user.endMerbership > actualDate()) {
-    const token = await jwt.sign(
-      { username: body.username },
-      process.env.SECRET_KEY
-    );
-    return res.status(200).json({ token });
+  if (user) {
+    if (user.endMerbership > actualDate()) {
+      const token = await jwt.sign(
+        { username: body.username },
+        process.env.SECRET_KEY
+      );
+      return res.status(200).json({token});
+    }
+    return res.status(401).json({error: 'Expired suscription'});
   }
-  return res.status(403).json({ error: "Not found" });
+  return res.status(403).json({error: "Not user found"});
 }
 
 async function createUser(req, res) {
